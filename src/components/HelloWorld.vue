@@ -27,14 +27,11 @@
       <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
     </ul>
-
-    <button v-on:click="accessSL" style="padding: 10px;margin:10px">Access ServiceLayer</button>
-    <button v-on:click="accessOData" >Access OData</button>
+    <button v-on:click="accessServiceLayer" style="padding: 10px;">
+      Access ServiceLayer
+    </button>
   </div>
 </template>
-
-<script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script>
-
 <script>
 export default {
   name: 'HelloWorld',
@@ -42,33 +39,17 @@ export default {
     msg: String
   },
   methods:{
-    greet: function (event) {
-      alert('Hello ' + this.name + '!')
-      if (event) {
-        alert(event.target.tagName)
-      }
-    },
-    accessSL: function(){
-      axios
-      .get('/svcl/b1s/v1/BusinessPartners?$select=CardCode, CardName&$top=1')
-      .then(function(response){
-        alert(JSON.stringify(response.data));
-      })
-      .catch(function (error) {
-        alert(error);
-        console.log(error);
-      });
-    },
-    accessOData: function(){
-      axios
-      .get('https://services.odata.org/V3/OData/OData.svc/Products?$format=json')
-      .then(function(response){
-        alert(JSON.stringify(response.data));
-      })
-      .catch(function (error) {
-        alert(error);
-        console.log(error);
-      });
+    accessServiceLayer: function(){
+      fetch("/b1s/v2/BusinessPartners?$select=CardCode, CardName&$top=1")
+      .then(res => res.json())
+      .then(
+        (result) => {
+          alert("Response from Service Layer:\n" + JSON.stringify(result));
+        },
+        (error) => {
+          alert(error);
+        }
+      )
     }
   }
 }
@@ -90,8 +71,5 @@ li {
 a {
   color: #42b983;
 }
-button{
-  padding: 10px;
-  margin:10px
-}
+
 </style>
